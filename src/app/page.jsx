@@ -19,9 +19,9 @@ useEffect(() => {
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_MICROCMS_API_URL, {
+        const response = await fetch(process.env.MICROCMS_API_URL, {
           headers: {
-            "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY,
+            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
           },
         });
         const data = await response.json();
