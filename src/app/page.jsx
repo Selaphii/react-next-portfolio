@@ -16,12 +16,13 @@ useEffect(() => {
     }, 3000);
   }, []);
 
+
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch(process.env.MICROCMS_API_URL, {
+        const response = await fetch(process.env.NEXT_PUBLIC_MICROCMS_API_URL, {
           headers: {
-            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
+            "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY,
           },
         });
         const data = await response.json();
@@ -32,7 +33,7 @@ useEffect(() => {
       }
     };
     fetchWorks();
-  }, []);
+  }, []);  
 
     const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +58,7 @@ useEffect(() => {
 
   const sections = {
     home: {
-      title: "ホーム",
+      title: "HOME",
       content: (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -72,12 +73,12 @@ useEffect(() => {
       ),
     },
     about: {
-      title: "自己紹介",
+      title: "Profile",
       content: (
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in">
             <h2 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
-              About Me
+              My Profile
             </h2>
             <p className="text-[#FF3333] mb-4 font-crimson-text slide-in">
               はじめまして、翁朱司と申します。学校でプログラミングを学んでいます。
@@ -137,7 +138,7 @@ useEffect(() => {
       ),
     },
     works: {
-      title: "作品",
+      title: "TheWorks",
       content: (
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="grid grid-cols-1 gap-6 max-w-6xl w-full">
@@ -149,10 +150,10 @@ useEffect(() => {
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
                   <div className="w-full md:w-[400px] h-[250px] bg-[#330000] rounded-lg float">
-                    {work.image && work.image.url && (
+                    {work.mainImage && work.mainImage.url && (
                       <img
-                        src={work.image.url}
-                        alt={`${work.title}のプレビュー画像`}
+                        src={work.mainImage.url}
+                        alt={`${work.title}のメイン画像`}
                         className="w-full h-full object-cover rounded-lg"
                         loading="lazy"
                         onError={(e) => {
@@ -162,14 +163,35 @@ useEffect(() => {
                       />
                     )}
                   </div>
+    
                   <div className="flex-1 slide-right">
-                    <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow">
-                      {work.title}
-                    </h3>
-                    <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
-                      {work.description}
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
+                  <a href={work.url} target="_blank" rel="noopener noreferrer">
+                  <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow hover:underline">
+                    {work.title}
+                  </h3>
+                  </a>
+                  <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
+                    {work.description}
+                  </p>
+                    {work.subImages && work.subImages.length > 0 && (
+                      <div className="flex gap-4 mt-4">
+                        {work.subImages.map((image, i) => (
+                          <img
+                            key={i}
+                            src={work.subImages.url}
+                            alt={`${work.title}のサブ画像 ${i + 1}`}
+                            className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/placeholder.png";
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+    
+                    <div className="flex gap-2 flex-wrap mt-4">
                       {work.technologies &&
                         work.technologies.map((tech, i) => (
                           <span
@@ -190,8 +212,9 @@ useEffect(() => {
         </div>
       ),
     },
-    contact: {
-      title: "お問い合わせ",
+
+        contact: {
+      title: "Contact",
       content: (
         <div className="min-h-screen flex items-center justify-center px-4">
           <div className="bg-[#1a0000] p-8 rounded-lg max-w-xl w-full fade-in">
@@ -203,7 +226,7 @@ useEffect(() => {
                 <input
                   type="text"
                   name="name"
-                  placeholder="お名前"
+                  placeholder="name"
                   required
                   className="w-full bg-[#330000] text-[#FF3333] p-2 rounded border border-[#FF0000] focus:outline-none focus:border-[#FF3333] transition-all hover:shadow-md hover:shadow-[#FF0000]/20"
                 />
@@ -212,7 +235,7 @@ useEffect(() => {
                 <input
                   type="email"
                   name="email"
-                  placeholder="メールアドレス"
+                  placeholder="mail address"
                   required
                   className="w-full bg-[#330000] text-[#FF3333] p-2 rounded border border-[#FF0000] focus:outline-none focus:border-[#FF3333] transition-all hover:shadow-md hover:shadow-[#FF0000]/20"
                 />
@@ -220,7 +243,7 @@ useEffect(() => {
               <div className="fade-in" style={{ animationDelay: "0.6s" }}>
                 <textarea
                   name="message"
-                  placeholder="メッセージ"
+                  placeholder="message"
                   rows="4"
                   required
                   className="w-full bg-[#330000] text-[#FF3333] p-2 rounded border border-[#FF0000] focus:outline-none focus:border-[#FF3333] transition-all hover:shadow-md hover:shadow-[#FF0000]/20"
@@ -242,7 +265,7 @@ useEffect(() => {
                 className="w-full bg-[#FF0000] text-white py-2 rounded hover:bg-[#CC0000] transition-all hover:shadow-lg hover:shadow-[#FF0000]/40 fade-in"
                 style={{ animationDelay: "0.8s" }}
               >
-                送信
+                submit
               </button>
             </form>
           </div>
@@ -395,7 +418,7 @@ useEffect(() => {
                 }}
                 className="glow"
               >
-                連絡先
+                Contact
               </h3>
               <div
                 style={{
@@ -443,7 +466,7 @@ useEffect(() => {
                 }}
                 className="glow"
               >
-                サイトマップ
+                SiteMap
               </h3>
               <ul
                 style={{
