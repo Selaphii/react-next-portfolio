@@ -1,7 +1,36 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 
-function MainComponent() {
+async function fetchWorks() {
+  const apiUrl = process.env.MICROCMS_API_URL;  
+  const apiKey = process.env.MICROCMS_API_KEY;  
+
+  if (!apiUrl || !apiKey) {
+    console.error("API URL or API Key is missing");
+    return [];
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/thework`, {  
+      headers: {
+        "X-MICROCMS-API-KEY": apiKey,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Failed to fetch data from MicroCMS:", res.status);
+      return [];
+    }
+
+    const data = await res.json();
+    return data.contents || []; 
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
+}
+
+export default function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -9,33 +38,16 @@ function MainComponent() {
   const [works, setWorks] = useState([]);
   const [formStatus, setFormStatus] = useState("");
 
-useEffect(() => {
+  useEffect(() => {
     setIsVisible(true);
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
+
+    fetchWorks().then(data => setWorks(data));
   }, []);
 
-
-  useEffect(() => {
-    const fetchWorks = async () => {
-      try {
-        const response = await fetch(process.env.NEXT_PUBLIC_MICROCMS_API_URL, {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY,
-          },
-        });
-        const data = await response.json();
-        setWorks(data.contents || []);
-      } catch (error) {
-        console.error("Failed to fetch works:", error);
-        setWorks([]);
-      }
-    };
-    fetchWorks();
-  }, []);  
-
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {
@@ -46,7 +58,6 @@ useEffect(() => {
     };
 
     try {
-      await db.contacts.add(data);
       setFormStatus("送信が完了しました！");
       e.target.reset();
       setTimeout(() => setFormStatus(""), 3000);
@@ -62,7 +73,7 @@ useEffect(() => {
       content: (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-[#FF0000] text-6xl md:text-8xl font-crimson-text mb-8 glow float">
+            <h1 className="text-[#FF0000] text-6xl md:text-8xl font-crimson-text mb-8 glow">
               Okina Shuji
             </h1>
             <p className="text-[#FF3333] text-xl md:text-2xl font-crimson-text fade-in">
@@ -90,27 +101,13 @@ useEffect(() => {
                   スキル
                 </h3>
                 <ul className="text-[#FF3333] list-disc list-inside">
-                <li className="hover:translate-x-2 transition-transform">
-                    HTML
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    CSS
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    JavaScript
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    React
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    Node.js
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    TypeScript
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    Python
-                  </li>
+                  <li className="hover:translate-x-2 transition-transform">HTML</li>
+                  <li className="hover:translate-x-2 transition-transform">CSS</li>
+                  <li className="hover:translate-x-2 transition-transform">JavaScript</li>
+                  <li className="hover:translate-x-2 transition-transform">React</li>
+                  <li className="hover:translate-x-2 transition-transform">Node.js</li>
+                  <li className="hover:translate-x-2 transition-transform">TypeScript</li>
+                  <li className="hover:translate-x-2 transition-transform">Python</li>
                 </ul>
               </div>
               <div className="fade-in" style={{ animationDelay: "0.6s" }}>
@@ -118,18 +115,10 @@ useEffect(() => {
                   経験
                 </h3>
                 <ul className="text-[#FF3333] list-disc list-inside">
-                  <li className="hover:translate-x-2 transition-transform">
-                    Web開発
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    API設計
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    データベース設計
-                  </li>
-                  <li className="hover:translate-x-2 transition-transform">
-                    UI/UXデザイン
-                  </li>
+                  <li className="hover:translate-x-2 transition-transform">Web開発</li>
+                  <li className="hover:translate-x-2 transition-transform">API設計</li>
+                  <li className="hover:translate-x-2 transition-transform">データベース設計</li>
+                  <li className="hover:translate-x-2 transition-transform">UI/UXデザイン</li>
                 </ul>
               </div>
             </div>
@@ -163,22 +152,21 @@ useEffect(() => {
                       />
                     )}
                   </div>
-    
                   <div className="flex-1 slide-right">
-                  <a href={work.url} target="_blank" rel="noopener noreferrer">
-                  <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow hover:underline">
-                    {work.title}
-                  </h3>
-                  </a>
-                  <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
-                    {work.description}
-                  </p>
+                    <a href={work.url} target="_blank" rel="noopener noreferrer">
+                      <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow hover:underline">
+                        {work.title}
+                      </h3>
+                    </a>
+                    <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
+                      {work.description}
+                    </p>
                     {work.subImages && work.subImages.length > 0 && (
                       <div className="flex gap-4 mt-4">
                         {work.subImages.map((image, i) => (
                           <img
                             key={i}
-                            src={work.subImages.url}
+                            src={image.url}
                             alt={`${work.title}のサブ画像 ${i + 1}`}
                             className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
                             loading="lazy"
@@ -190,7 +178,6 @@ useEffect(() => {
                         ))}
                       </div>
                     )}
-    
                     <div className="flex gap-2 flex-wrap mt-4">
                       {work.technologies &&
                         work.technologies.map((tech, i) => (
@@ -212,8 +199,7 @@ useEffect(() => {
         </div>
       ),
     },
-
-        contact: {
+    contact: {
       title: "Contact",
       content: (
         <div className="min-h-screen flex items-center justify-center px-4">
@@ -510,121 +496,11 @@ useEffect(() => {
                 fontFamily: "Crimson Text",
               }}
             >
-              © 2025 Portfolio. All rights reserved.
+              ©2025 Okina Shuji 2434
             </p>
           </div>
         </div>
       </footer>
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes slideRight {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes float {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
-
-        @keyframes glow {
-          0% {
-            text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
-          }
-          50% {
-            text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000;
-          }
-          100% {
-            text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
-          }
-        }
-
-        @keyframes smoke {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 0.4;
-          }
-          100% {
-            transform: translateY(-100vh) scale(3);
-            opacity: 0;
-          }
-        }
-
-        .fade-in {
-          opacity: 0;
-          animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .slide-in {
-          opacity: 0;
-          animation: slideIn 0.8s ease-out forwards;
-        }
-
-        .slide-right {
-          opacity: 0;
-          animation: slideRight 0.8s ease-out forwards;
-        }
-
-        .float {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .glow {
-          animation: glow 2s ease-in-out infinite;
-        }
-
-        .smoke-particle {
-          position: absolute;
-          width: 60px;
-          height: 60px;
-          background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, rgba(255,0,0,0) 70%);
-          border-radius: 50%;
-          animation: smoke 10s infinite;
-          opacity: 0;
-        }
-
-        .smoke-particle:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .smoke-particle:nth-child(2) { left: 30%; animation-delay: 2s; }
-        .smoke-particle:nth-child(3) { left: 50%; animation-delay: 4s; }
-        .smoke-particle:nth-child(4) { left: 70%; animation-delay: 6s; }
-        .smoke-particle:nth-child(5) { left: 90%; animation-delay: 8s; }
-      `}</style>
     </div>
   );
 }
-
-export default MainComponent;
