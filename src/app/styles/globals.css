@@ -1,22 +1,181 @@
-/* グローバルなネオン風の文字スタイル */
+/* fade-inアニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ネオン風アニメーション */
 @keyframes glow {
-    0% {
-      text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000, 0 0 20px #FF0000, 0 0 30px #FF0000;
-    }
-    50% {
-      text-shadow: 0 0 10px #FF0000, 0 0 20px #FF0000, 0 0 30px #FF0000, 0 0 40px #FF0000;
-    }
-    100% {
-      text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000, 0 0 20px #FF0000, 0 0 30px #FF0000;
-    }
+  0% {
+    text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
   }
-  
-  .glow {
-    animation: glow 1.5s ease-in-out infinite;
+  50% {
+    text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000;
   }
-  
-  .text-glow {
-    color: #FF0000;
-    animation: glow 1.5s ease-in-out infinite;
+  100% {
+    text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
   }
-  
+}
+
+/* ヘッダーのネオン風 */
+h1.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* スクロールで表示されるタブリンク */
+.scroll-link {
+  background-color: transparent;
+  color: #FF0000;
+  font-size: 1.25rem;
+  padding: 10px 20px;
+  border: 2px solid #FF0000;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.scroll-link:hover {
+  background-color: #FF0000;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* ボタンがスクロールでアニメーションするクラス */
+.btn-scroll {
+  animation: slideUp 1s ease-out forwards, bounce 1.5s ease infinite;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.btn-scroll.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* スクロールアニメーション */
+@keyframes slideUp {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ボタンの基本スタイル */
+.scroll-btn {
+  background-color: #FF0000;
+  color: white;
+  font-size: 1.25rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.scroll-btn:hover {
+  background-color: #CC0000;
+  transform: scale(1.1);
+}
+
+/* フッターの基本スタイル */
+footer {
+  background-color: #1a0000;
+  color: #FF3333;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+/* その他のスタイル */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* fade-inアニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ネオン風アニメーション */
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
+  }
+  50% {
+    text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000;
+  }
+  100% {
+    text-shadow: 0 0 5px #FF0000, 0 0 10px #FF0000;
+  }
+}
+
+/* ヘッダーのネオン風 */
+h1.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* スクロールで表示されるタブリンク */
+.scroll-link {
+  background-color: transparent;
+  color: #FF0000;
+  font-size: 1.25rem;
+  padding: 10px 20px;
+  border: 2px solid #FF0000;
+  border-radius: 25px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.scroll-link:hover {
+  background-color: #FF0000;
+  color: #FF0000;
+  transform: scale(1.1);
+}
+
+/* 背景の画像設定 */
+.bg-cover {
+  background-size: cover;
+}
+
+.bg-fixed {
+  background-attachment: fixed;
+}
+
+.bg-center {
+  background-position: center;
+}

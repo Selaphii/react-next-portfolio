@@ -1,36 +1,7 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-async function fetchWorks() {
-  const apiUrl = process.env.MICROCMS_API_URL;  
-  const apiKey = process.env.MICROCMS_API_KEY;  
-
-  if (!apiUrl || !apiKey) {
-    console.error("API URL or API Key is missing");
-    return [];
-  }
-
-  try {
-    const res = await fetch(`${apiUrl}/thework`, {  
-      headers: {
-        "X-MICROCMS-API-KEY": apiKey,
-      },
-    });
-
-    if (!res.ok) {
-      console.error("Failed to fetch data from MicroCMS:", res.status);
-      return [];
-    }
-
-    const data = await res.json();
-    return data.contents || []; 
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return [];
-  }
-}
-
-export default function MainComponent() {
+function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,8 +14,24 @@ export default function MainComponent() {
     setTimeout(() => {
       setIsLoading(false);
     }, 3000);
+  }, []);
 
-    fetchWorks().then(data => setWorks(data));
+  useEffect(() => {
+    const fetchWorks = async () => {
+      try {
+        const response = await fetch(process.env.MICROCMS_API_URL, {
+          headers: {
+            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
+          },
+        });
+        const data = await response.json();
+        setWorks(data.contents || []);
+      } catch (error) {
+        console.error("Failed to fetch works:", error);
+        setWorks([]);
+      }
+    };
+    fetchWorks();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -58,6 +45,7 @@ export default function MainComponent() {
     };
 
     try {
+      console.log("Form data submitted:", data);
       setFormStatus("送信が完了しました！");
       e.target.reset();
       setTimeout(() => setFormStatus(""), 3000);
@@ -71,13 +59,21 @@ export default function MainComponent() {
     home: {
       title: "HOME",
       content: (
-        <div className="min-h-screen flex items-center justify-center">
+        <div
+          className="min-h-screen flex items-center justify-center"
+          style={{
+            backgroundImage: "url('/background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+          }}
+        >
           <div className="text-center">
             <h1 className="text-[#FF0000] text-6xl md:text-8xl font-crimson-text mb-8 glow">
-              Okina Shuji
+              Welcome to My Portfolio
             </h1>
             <p className="text-[#FF3333] text-xl md:text-2xl font-crimson-text fade-in">
-              Web Creater
+              Okina Shuji
             </p>
           </div>
         </div>
@@ -86,11 +82,19 @@ export default function MainComponent() {
     about: {
       title: "Profile",
       content: (
-        <div className="min-h-screen flex items-center justify-center px-4">
+        <div
+          className="min-h-screen flex items-center justify-center px-4"
+          style={{
+            backgroundImage: "url('/background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+          }}
+        >
           <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in">
-            <h2 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
+            <h1 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
               My Profile
-            </h2>
+            </h1>
             <p className="text-[#FF3333] mb-4 font-crimson-text slide-in">
               はじめまして、翁朱司と申します。学校でプログラミングを学んでいます。
               得意なプログラミング言語はhtmlとcssとjavascriptです。
@@ -129,7 +133,15 @@ export default function MainComponent() {
     works: {
       title: "TheWorks",
       content: (
-        <div className="min-h-screen flex items-center justify-center px-4">
+        <div
+          className="min-h-screen flex items-center justify-center px-4"
+          style={{
+            backgroundImage: "url('/background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+          }}
+        >
           <div className="grid grid-cols-1 gap-6 max-w-6xl w-full">
             {works && works.length > 0 ? (
               works.map((work, index) => (
@@ -145,13 +157,10 @@ export default function MainComponent() {
                         alt={`${work.title}のメイン画像`}
                         className="w-full h-full object-cover rounded-lg"
                         loading="lazy"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "/placeholder.png";
-                        }}
                       />
                     )}
                   </div>
+
                   <div className="flex-1 slide-right">
                     <a href={work.url} target="_blank" rel="noopener noreferrer">
                       <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow hover:underline">
@@ -166,7 +175,7 @@ export default function MainComponent() {
                         {work.subImages.map((image, i) => (
                           <img
                             key={i}
-                            src={image.url}
+                            src={work.subImages.url}
                             alt={`${work.title}のサブ画像 ${i + 1}`}
                             className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
                             loading="lazy"
@@ -178,6 +187,7 @@ export default function MainComponent() {
                         ))}
                       </div>
                     )}
+
                     <div className="flex gap-2 flex-wrap mt-4">
                       {work.technologies &&
                         work.technologies.map((tech, i) => (
@@ -199,14 +209,23 @@ export default function MainComponent() {
         </div>
       ),
     },
+
     contact: {
       title: "Contact",
       content: (
-        <div className="min-h-screen flex items-center justify-center px-4">
+        <div
+          className="min-h-screen flex items-center justify-center px-4"
+          style={{
+            backgroundImage: "url('/background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+          }}
+        >
           <div className="bg-[#1a0000] p-8 rounded-lg max-w-xl w-full fade-in">
-            <h2 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
+            <h1 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
               Contact
-            </h2>
+            </h1>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="fade-in" style={{ animationDelay: "0.2s" }}>
                 <input
@@ -259,25 +278,6 @@ export default function MainComponent() {
       ),
     },
   };
-
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <div className="relative">
-          <div className="higanbana"></div>
-          <div className="petal-container">
-            {[...Array.from({ length: 12 })].map((_, i) => (
-              <div
-                key={i}
-                className="petal"
-                style={{ animationDelay: `${i * 0.2}s` }}
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -356,29 +356,7 @@ export default function MainComponent() {
       <div style={{ paddingTop: "4rem" }}>
         {sections[activeSection].content}
       </div>
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-        }}
-      >
-        <div className="smoke-particle"></div>
-        <div className="smoke-particle"></div>
-        <div className="smoke-particle"></div>
-        <div className="smoke-particle"></div>
-        <div className="smoke-particle"></div>
-      </div>
-      <footer
-        style={{
-          backgroundColor: "#1a0000",
-          color: "#FF3333",
-          padding: "2rem 0",
-          marginTop: "auto",
-        }}
-      >
+      <footer>
         <div
           style={{
             maxWidth: "72rem",
@@ -395,7 +373,7 @@ export default function MainComponent() {
             className="footer-grid"
           >
             <div className="fade-in">
-              <h3
+              <h1
                 style={{
                   color: "#FF0000",
                   fontSize: "1.25rem",
@@ -405,7 +383,7 @@ export default function MainComponent() {
                 className="glow"
               >
                 Contact
-              </h3>
+              </h1>
               <div
                 style={{
                   display: "flex",
@@ -443,7 +421,7 @@ export default function MainComponent() {
               </div>
             </div>
             <div className="fade-in">
-              <h3
+              <h1
                 style={{
                   color: "#FF0000",
                   fontSize: "1.25rem",
@@ -453,7 +431,7 @@ export default function MainComponent() {
                 className="glow"
               >
                 SiteMap
-              </h3>
+              </h1>
               <ul
                 style={{
                   display: "flex",
@@ -496,7 +474,7 @@ export default function MainComponent() {
                 fontFamily: "Crimson Text",
               }}
             >
-              ©2025 Okina Shuji 2434
+              © 2025 Portfolio. All rights reserved.
             </p>
           </div>
         </div>
@@ -504,3 +482,5 @@ export default function MainComponent() {
     </div>
   );
 }
+
+export default MainComponent;
