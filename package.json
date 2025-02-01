@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "buffer": "^6.0.3",
-    "microcms-js-sdk": "^3.1.0",
+    "microcms-js-sdk": "^3.1.2",
     "next": "^14.0.4",
     "node-fetch": "^3.3.2",
     "react": "^18",

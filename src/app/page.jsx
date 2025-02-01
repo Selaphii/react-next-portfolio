@@ -3,34 +3,33 @@ import React, { useState, useEffect } from "react";
 
 function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
-  const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [works, setWorks] = useState([]);
   const [formStatus, setFormStatus] = useState("");
-
-  useEffect(() => {
-    setIsVisible(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch("https://thework.microcms.io/api/v1/thework", {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
-          },
-        });
+        const response = await fetch(
+          `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/thework`,
+          {
+            headers: {
+              "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY, 
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch works: ${response.status}`);
+        }
+
         const data = await response.json();
-        setWorks(data.contents || []);
+        setWorks(data.contents || []); 
       } catch (error) {
         console.error("Failed to fetch works:", error);
-        setWorks([]);
       }
     };
+
     fetchWorks();
   }, []);
 
@@ -69,7 +68,7 @@ function MainComponent() {
           }}
         >
           <div className="text-center">
-            <h1 className="text-[#FF0000] text-6xl md:text-8xl font-crimson-text mb-8 glow">
+            <h1 className="text-[#FF0000] text-7xl md:text-8xl font-crimson-text mb-8 glow">
               Welcome to My Portfolio
             </h1>
             <p className="text-[#FF3333] text-xl md:text-2xl font-crimson-text fade-in">
@@ -91,7 +90,7 @@ function MainComponent() {
             backgroundAttachment: "fixed",
           }}
         >
-          <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in w-full">
+          <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in">
             <h1 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
               My Profile
             </h1>
@@ -163,21 +162,25 @@ function MainComponent() {
 
                   <div className="flex-1 slide-right">
                     <a href={work.url} target="_blank" rel="noopener noreferrer">
-                      <h3 className="text-[#FF0000] text-2xl mb-4 font-crimson-text glow hover:underline">
+                      <h3 className="text-[#FF0000] text-3xl md:text-4xl mb-4 font-crimson-text glow hover:underline">
                         {work.title}
                       </h3>
                     </a>
                     <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
                       {work.subtitle}
                     </p>
-                    {work.subImages && work.subImages.url && (
-                      <img
-                        src={work.subImages.url}
-                        alt={`${work.title}のサブ画像`}
-                        className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
-                        loading="lazy"
-                      />
-                    )}
+                    <div className="flex gap-4 mt-4">
+                      {work.subImages &&
+                        work.subImages.map((subImage, i) => (
+                          <img
+                            key={i}
+                            src={subImage.url}
+                            alt={`${work.title}のサブ画像`}
+                            className="w-[150px] h-[100px] object-cover rounded-lg shadow-md"
+                            loading="lazy"
+                          />
+                        ))}
+                    </div>
                     <div className="flex gap-2 flex-wrap mt-4">
                       {work.technologies &&
                         work.technologies.map((tech, i) => (
@@ -296,7 +299,7 @@ function MainComponent() {
         >
           <div className="hidden md:hidden">
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() => setMenuOpen(!menuOpen)} // メニュー開閉状態を切り替える
               style={{
                 color: "#FF3333",
                 cursor: "pointer",
@@ -315,7 +318,7 @@ function MainComponent() {
                   key={key}
                   onClick={() => {
                     setActiveSection(key);
-                    setMenuOpen(false);
+                    setMenuOpen(false); // メニューを閉じる
                   }}
                   style={{
                     fontSize: "1.125rem",
