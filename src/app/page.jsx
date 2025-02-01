@@ -3,34 +3,34 @@ import React, { useState, useEffect } from "react";
 
 function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
-  const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [works, setWorks] = useState([]);
   const [formStatus, setFormStatus] = useState("");
-
-  useEffect(() => {
-    setIsVisible(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }, []);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch(process.env.MICROCMS_API_URL, {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
-          },
-        });
+        const response = await fetch(
+          "https://thework.microcms.io/api/v1/thework", 
+          {
+            headers: {
+              "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY, 
+            },
+          }
+        );
         const data = await response.json();
-        setWorks(data.contents || []);
+        console.log("Fetched works:", data); 
+        if (data.contents && Array.isArray(data.contents)) {
+          setWorks(data.contents); 
+        } else {
+          throw new Error("Invalid data structure or no data found.");
+        }
       } catch (error) {
-        console.error("Failed to fetch works:", error);
+        console.error("Error fetching works:", error);
         setWorks([]);
       }
     };
+
     fetchWorks();
   }, []);
 
@@ -131,7 +131,7 @@ function MainComponent() {
       ),
     },
     works: {
-      title: "TheWorks",
+      title: "The Works",
       content: (
         <div
           className="min-h-screen flex items-center justify-center px-4"
@@ -168,26 +168,16 @@ function MainComponent() {
                       </h3>
                     </a>
                     <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
-                      {work.description}
+                      {work.subtitle}
                     </p>
-                    {work.subImages && work.subImages.length > 0 && (
-                      <div className="flex gap-4 mt-4">
-                        {work.subImages.map((image, i) => (
-                          <img
-                            key={i}
-                            src={work.subImages.url}
-                            alt={`${work.title}のサブ画像 ${i + 1}`}
-                            className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
-                            loading="lazy"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = "/placeholder.png";
-                            }}
-                          />
-                        ))}
-                      </div>
+                    {work.subImages && work.subImages.url && (
+                      <img
+                        src={work.subImages.url}
+                        alt={`${work.title}のサブ画像`}
+                        className="w-[100px] h-[100px] object-cover rounded-lg shadow-md"
+                        loading="lazy"
+                      />
                     )}
-
                     <div className="flex gap-2 flex-wrap mt-4">
                       {work.technologies &&
                         work.technologies.map((tech, i) => (
@@ -209,7 +199,6 @@ function MainComponent() {
         </div>
       ),
     },
-
     contact: {
       title: "Contact",
       content: (

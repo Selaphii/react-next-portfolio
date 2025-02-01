@@ -9,3 +9,13 @@ const nextConfig = {
   },
 };
 module.exports = nextConfig;
+// next.config.js
+module.exports = {
+  webpack(config) {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      buffer: require.resolve("buffer/"),
+    };
+    return config;
+  },
+};
