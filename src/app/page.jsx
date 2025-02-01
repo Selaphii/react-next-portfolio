@@ -463,7 +463,7 @@ function MainComponent() {
                 fontFamily: "Crimson Text",
               }}
             >
-              © 2025 Portfolio. All rights reserved.
+               okina shuji 2434
             </p>
           </div>
         </div>
