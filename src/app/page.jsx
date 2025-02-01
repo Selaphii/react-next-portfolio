@@ -3,34 +3,34 @@ import React, { useState, useEffect } from "react";
 
 function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [works, setWorks] = useState([]);
   const [formStatus, setFormStatus] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
 
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch(
-          "https://thework.microcms.io/api/v1/thework", 
-          {
-            headers: {
-              "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY, 
-            },
-          }
-        );
+        const response = await fetch("https://thework.microcms.io/api/v1/thework", {
+          headers: {
+            "X-MICROCMS-API-KEY": process.env.MICROCMS_API_KEY,
+          },
+        });
         const data = await response.json();
-        console.log("Fetched works:", data); 
-        if (data.contents && Array.isArray(data.contents)) {
-          setWorks(data.contents); 
-        } else {
-          throw new Error("Invalid data structure or no data found.");
-        }
+        setWorks(data.contents || []);
       } catch (error) {
-        console.error("Error fetching works:", error);
+        console.error("Failed to fetch works:", error);
         setWorks([]);
       }
     };
-
     fetchWorks();
   }, []);
 
@@ -91,7 +91,7 @@ function MainComponent() {
             backgroundAttachment: "fixed",
           }}
         >
-          <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in">
+          <div className="bg-[#1a0000] p-8 rounded-lg max-w-2xl fade-in w-full">
             <h1 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
               My Profile
             </h1>
@@ -99,7 +99,7 @@ function MainComponent() {
               はじめまして、翁朱司と申します。学校でプログラミングを学んでいます。
               得意なプログラミング言語はhtmlとcssとjavascriptです。
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="fade-in" style={{ animationDelay: "0.3s" }}>
                 <h3 className="text-[#FF0000] text-xl mb-2 font-crimson-text">
                   スキル
@@ -463,7 +463,7 @@ function MainComponent() {
                 fontFamily: "Crimson Text",
               }}
             >
-               okina shuji 2434
+              Okina Shuji 2434
             </p>
           </div>
         </div>
