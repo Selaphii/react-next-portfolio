@@ -10,29 +10,22 @@ function MainComponent() {
   useEffect(() => {
     const fetchWorks = async () => {
       try {
-        const response = await fetch(
-          `https://${process.env.NEXT_PUBLIC_MICROCMS_SERVICE_DOMAIN}.microcms.io/api/v1/thework`,
-          {
-            headers: {
-              "X-MICROCMS-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY, 
-            },
-          }
-        );
-
+        const response = await fetch("/api/microcms"); // VercelのAPIルート経由で取得
+  
         if (!response.ok) {
           throw new Error(`Failed to fetch works: ${response.status}`);
         }
-
+  
         const data = await response.json();
-        setWorks(data.contents || []); 
+        setWorks(data.contents || []);
       } catch (error) {
         console.error("Failed to fetch works:", error);
       }
     };
-
+  
     fetchWorks();
   }, []);
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
