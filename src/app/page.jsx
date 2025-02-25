@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import PetalAnimation from "../components/PetalAnimation";
 
 function MainComponent() {
   const [activeSection, setActiveSection] = useState("home");
@@ -60,6 +61,7 @@ function MainComponent() {
             backgroundAttachment: "fixed",
           }}
         >
+          <PetalAnimation />
           <div className="text-center">
             <h1 className="text-[#FF0000] text-7xl md:text-8xl font-crimson-text mb-8 glow">
               Welcome to My Portfolio
@@ -155,9 +157,9 @@ function MainComponent() {
 
                   <div className="flex-1 slide-right">
                     <a href={work.url} target="_blank" rel="noopener noreferrer">
-                      <h3 className="text-[#FF0000] text-3xl md:text-4xl mb-4 font-crimson-text glow hover:underline">
+                      <h1 className="text-[#FF0000] text-4xl font-crimson-text mb-6 glow">
                         {work.title}
-                      </h3>
+                      </h1>
                     </a>
                     <p className="text-[#FF3333] mb-6 font-crimson-text text-lg">
                       {work.subtitle}
@@ -361,7 +363,7 @@ function MainComponent() {
               <h1
                 style={{
                   color: "#FF0000",
-                  fontSize: "1.25rem",
+                  fontSize: "1.5rem",
                   fontFamily: "Crimson Text",
                   marginBottom: "1rem",
                 }}
@@ -375,10 +377,11 @@ function MainComponent() {
                   flexDirection: "column",
                   gap: "0.5rem",
                 }}
+                className="glow"
               >
                 <p style={{ display: "flex", alignItems: "center" }}>
                   <i
-                    className="fas fa-envelope"
+                    className="fas fa-envelope glow"
                     style={{ marginRight: "0.5rem" }}
                   ></i>
                   KTC24A31E0004@edu.kyoto-tech.ac.jp
@@ -409,7 +412,7 @@ function MainComponent() {
               <h1
                 style={{
                   color: "#FF0000",
-                  fontSize: "1.25rem",
+                  fontSize: "1.5rem",
                   fontFamily: "Crimson Text",
                   marginBottom: "1rem",
                 }}

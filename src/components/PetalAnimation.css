@@ -1,0 +1,96 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: black;
+  font-family: 'Consolas', monospace
+}
+
+.petal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -3; /* 背景やアニメーションより下に配置 */
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/background.png'); /* 背景画像を設定 */
+  background-size: cover;
+  background-position: center;
+  z-index: -2; /* 背景画像が最背面に来るように */
+}
+
+.fog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* 黒い霧 */
+  z-index: -1; /* 霧が背景画像の上に来るように */
+  animation: fogAnimation 8s infinite; /* 黒い霧のアニメーション */
+}
+
+@keyframes fogAnimation {
+  0% {
+    box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 150px 50px rgba(0, 0, 0, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ffcc00; /* 火花の色 */
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: sparkAnimation 1s infinite ease-out;
+  z-index: 0; /* 火花は霧の上に表示 */
+}
+
+@keyframes sparkAnimation {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* コンテンツ部分のスタイル */
+.content {
+  position: relative; /* コンテンツが最前面に来るように */
+  z-index: 1; /* アニメーションより前面に表示 */
+  padding: 20px;
+  text-align: center;
+}
+
+/* フッターのスタイル */
+footer {
+  position: relative; /* スクロール時に表示されるように修正 */
+  bottom: 0;
+  width: 100%;
+  z-index: 2; /* フッターが最前面に来るように */
+  background-color: #1a0000;
+  color: #ff3333;
+  text-align: left; /* 左寄せ */
+  padding: 10px 20px; /* サイズを小さく */
+  font-size: 1rem; /* フォントサイズを少し小さく */
+  font-family: 'Consolas', monospace
+}
