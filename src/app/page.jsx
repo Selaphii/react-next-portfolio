@@ -145,6 +145,7 @@ function MainComponent() {
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
                   <div className="w-full md:w-[400px] h-[250px] bg-[#330000] rounded-lg float">
+                  <a href={work.url} target="_blank" rel="noopener noreferrer">
                     {work.mainImage && work.mainImage.url && (
                       <img
                         src={work.mainImage.url}
@@ -153,6 +154,7 @@ function MainComponent() {
                         loading="lazy"
                       />
                     )}
+                  </a>
                   </div>
 
                   <div className="flex-1 slide-right">
